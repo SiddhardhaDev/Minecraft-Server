@@ -14,6 +14,7 @@
             --text-muted: #94a3b8;
             --accent: #8b5cf6;
             --accent-hover: #7c3aed;
+            --discord-color: #5865F2;
         }
 
         * {
@@ -30,7 +31,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* A subtle animated gradient background */
             background: radial-gradient(circle at 50% 0%, #1a1528 0%, #07090f 70%);
         }
 
@@ -75,7 +75,14 @@
             color: var(--text-muted);
             font-size: 1.1rem;
             line-height: 1.6;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 2rem;
         }
 
         .ip-box {
@@ -86,7 +93,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
             transition: all 0.3s ease;
         }
 
@@ -94,9 +100,17 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
+        .label {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
         .ip-text {
             font-family: monospace;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-main);
             letter-spacing: 1px;
         }
@@ -105,16 +119,35 @@
             background: var(--accent);
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
+            font-size: 0.85rem;
             transition: 0.3s;
         }
 
         .copy-btn:hover {
             background: var(--accent-hover);
             transform: translateY(-2px);
+        }
+
+        .discord-btn {
+            display: block;
+            background: var(--discord-color);
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            transition: 0.3s;
+        }
+
+        .discord-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.2);
         }
 
         .status {
@@ -154,10 +187,27 @@
         <h1>Galaxy SMP</h1>
         <p>A private vanilla survival experience. Grab your gear, hop in the Discord, and let's build something incredible.</p>
 
-        <div class="ip-box">
-            <span class="ip-text" id="server-ip">galaxysmpisthis.com</span>
-            <button class="copy-btn" onclick="copyIP()" id="btn-text">Copy IP</button>
+        <div class="info-grid">
+            <div class="ip-box">
+                <div>
+                    <span class="label">Java Address</span>
+                    <span class="ip-text" id="server-ip">galaxysmpisthis.com</span>
+                </div>
+                <button class="copy-btn" onclick="copyText('server-ip', 'btn-java')" id="btn-java">Copy IP</button>
+            </div>
+
+            <div class="ip-box">
+                <div>
+                    <span class="label">Bedrock Port</span>
+                    <span class="ip-text" id="server-port">19132</span>
+                </div>
+                <button class="copy-btn" onclick="copyText('server-port', 'btn-port')" id="btn-port">Copy Port</button>
+            </div>
         </div>
+
+        <a href="https://discord.gg/cxE5jsMMkr" target="_blank" class="discord-btn">
+            Join Galaxy SMP Discord
+        </a>
 
         <div class="status">
             <div class="dot"></div>
@@ -166,16 +216,18 @@
     </div>
 
     <script>
-        function copyIP() {
-            const ip = document.getElementById("server-ip").innerText;
-            navigator.clipboard.writeText(ip).then(() => {
-                const btn = document.getElementById("btn-text");
+        function copyText(elementId, btnId) {
+            const text = document.getElementById(elementId).innerText;
+            const btn = document.getElementById(btnId);
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
                 btn.innerText = "Copied!";
-                btn.style.background = "#22c55e"; // Turns green
+                btn.style.background = "#22c55e"; 
                 
                 setTimeout(() => {
-                    btn.innerText = "Copy IP";
-                    btn.style.background = "var(--accent)"; // Reverts to purple
+                    btn.innerText = originalText;
+                    btn.style.background = "var(--accent)"; 
                 }, 2000);
             });
         }
