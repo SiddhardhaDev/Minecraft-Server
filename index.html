@@ -303,7 +303,7 @@
 
     try {
         // Use V3 API and bypass cache with a timestamp
-        const response = await fetch('https://api.mcsrvstat.us/3/2b2t.org?t=' + Date.now());
+        const response = await fetch('https://api.mcsrvstat.us/3/galaxysmpisthis.aternos.me?t=' + Date.now());
         const data = await response.json();
 
         // Aternos fix: Sometimes it says online but has no IP data if it's still booting
