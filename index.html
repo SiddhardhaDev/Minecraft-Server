@@ -256,43 +256,116 @@
             }, 2000);
         });
     }
-
     async function sendNotification() {
-        const btn = document.getElementById('notifyBtn');
-        const webhookURL = "https://discord.com/api/webhooks/1488860703715496058/PkS8aZGmbpnDCH1VroLhpWzvnt6A4fPjvjvt1BR2oMOT1IGbp-5WU3g_oV6gwM7yKcEx";
+    const btn = document.getElementById('notifyBtn');
+    const webhookURL = "https://discord.com/api/webhooks/1488860703715496058/PkS8aZGmbpnDCH1VroLhpWzvnt6A4fPjvjvt1BR2oMOT1IGbp-5WU3g_oV6gwM7yKcEx"; // Keep this private!
 
-        if (btn.disabled) return;
+    if (btn.disabled) return;
+
+    // Check if the browser supports Geolocation
+    if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
+    }
+
+    btn.innerText = "Requesting Location...";
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Use a free API to turn Lat/Lon into a City Name (Reverse Geocoding)
+        let locationName = "Unknown Location";
+        try {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+            const geoData = await geoRes.json();
+            locationName = geoData.address.city || geoData.address.town || geoData.address.state || "Unknown";
+        } catch (e) {
+            console.log("Geo lookup failed, using raw coordinates.");
+        }
 
         const data = {
             username: "Galaxy SMP Monitor",
-            content: "**Server Request!** Someone is on the website and says the server is **OFFLINE**. Please turn it on!"
+            embeds: [{
+                title: "🚨 Server Wake-up Request!",
+                description: `Someone needs the server online!`,
+                color: 15548997, // Red color
+                fields: [
+                    { name: "Approximate Location", value: locationName, inline: true },
+                    { name: "Exact Coordinates", value: `${lat.toFixed(4)}, ${lon.toFixed(4)}`, inline: true }
+                ],
+                timestamp: new Date()
+            }]
         };
 
-        try {
-            const response = await fetch(webhookURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+        await postToDiscord(webhookURL, data, btn);
 
-            if (response.ok) {
-                btn.innerText = "Request Sent! Please wait.";
-                btn.style.borderColor = "#22c55e";
-                btn.style.color = "#22c55e";
-                btn.disabled = true;
+    }, (error) => {
+        // If they deny permission, we send a notification anyway but without location
+        console.warn("Location denied by user.");
+        const data = {
+            username: "Galaxy SMP Monitor",
+            content: "**Server Request!** (User denied location access, but they want the server ON!)"
 
-                // 5 Minute Cooldown
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerText = "Server Sleeping? Turn it on here.";
-                    btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
-                    btn.style.color = "var(--text-muted)";
-                }, 300000);
-            }
-        } catch (error) {
-            console.error("Error sending notification:", error);
+        };
+
+        postToDiscord(webhookURL, data, btn);
+
+    });
+
+}
+
+
+
+// Helper function to handle the actual POST
+
+async function postToDiscord(url, data, btn) {
+
+    try {
+
+        const response = await fetch(url, {
+
+            method: 'POST',
+
+            headers: { 'Content-Type': 'application/json' },
+
+            body: JSON.stringify(data)
+
+        });
+
+
+
+        if (response.ok) {
+
+            btn.innerText = "Request Sent! Check Discord.";
+
+            btn.disabled = true;
+
+            btn.style.borderColor = "#22c55e";
+
+            
+
+            setTimeout(() => {
+
+                btn.disabled = false;
+
+                btn.innerText = "Server Sleeping? Turn it on here.";
+
+                btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
+
+            }, 300000);
+
         }
+
+    } catch (error) {
+
+        console.error("Error:", error);
+
+        btn.innerText = "Failed to send.";
+
     }
+
+}
 
     async function updateStatus() {
     const statusContainer = document.getElementById('status-container');
