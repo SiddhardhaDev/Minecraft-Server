@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Galaxy SMP - A private, friends-only Minecraft server.">
+    <meta name="description" content="Galaxy SMP - A private, friends-only Minecraft server on Aternos.">
     <title>Galaxy SMP | Private Server</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -50,7 +50,6 @@
             animation: fadeIn 1s ease-out;
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 480px) {
             .container { padding: 1.5rem; border-radius: 16px; }
             h1 { font-size: 2.5rem !important; }
@@ -116,7 +115,7 @@
             margin-bottom: 4px;
         }
 
-        .ip-text { font-family: monospace; font-size: 1.2rem; }
+        .ip-text { font-family: monospace; font-size: 1.2rem; color: #fff; }
 
         .copy-btn {
             background: var(--accent);
@@ -143,7 +142,6 @@
 
         .discord-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        /* Status Card */
         .status-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
@@ -188,21 +186,21 @@
     <div class="container">
         <div class="tag">Friends Only</div>
         <h1>Galaxy SMP</h1>
-        <p>A private vanilla survival experience. Hop in the Discord and start building.</p>
+        <p>A private vanilla survival experience. Copy the info below and join the galaxy.</p>
 
         <div class="info-grid">
             <div class="ip-box">
                 <div>
-                    <span class="label">Server Address</span>
-                    <span class="ip-text" id="server-ip">galaxysmp.run.place</span>
+                    <span class="label">Server IP</span>
+                    <span class="ip-text" id="server-ip">galaxysmpisthis.aternos.me</span>
                 </div>
                 <button class="copy-btn" onclick="copyText('server-ip', 'btn-ip')" id="btn-ip">Copy IP</button>
             </div>
 
             <div class="ip-box">
                 <div>
-                    <span class="label">Bedrock Port</span>
-                    <span class="ip-text" id="server-port">19132</span>
+                    <span class="label">Server Port</span>
+                    <span class="ip-text" id="server-port">47475</span>
                 </div>
                 <button class="copy-btn" onclick="copyText('server-port', 'btn-port')" id="btn-port">Copy Port</button>
             </div>
@@ -244,7 +242,8 @@
             const playerNumbers = document.getElementById('player-numbers');
 
             try {
-                const response = await fetch('https://mcapi.us/server/status?ip=galaxysmp.run.place');
+                // Aternos address pinging via mcapi.us
+                const response = await fetch('https://mcapi.us/server/status?ip=galaxysmpisthis.aternos.me&port=47475');
                 const data = await response.json();
 
                 if (data.online) {
@@ -253,6 +252,23 @@
                     statusText.style.color = "var(--online)";
                     playerInfo.style.display = "block";
                     playerNumbers.innerText = `${data.players.now} / ${data.players.max}`;
+                } else {
+                    statusContainer.className = "status offline";
+                    statusText.innerText = "Server Offline";
+                    statusText.style.color = "var(--offline)";
+                    playerInfo.style.display = "none";
+                }
+            } catch (e) {
+                statusText.innerText = "Offline";
+                statusContainer.className = "status offline";
+            }
+        }
+
+        updateStatus();
+        setInterval(updateStatus, 30000);
+    </script>
+</body>
+</html>
                 } else {
                     statusContainer.className = "status offline";
                     statusText.innerText = "Server Offline";
