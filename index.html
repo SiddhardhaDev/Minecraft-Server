@@ -18,6 +18,7 @@
             --online: #22c55e;
             --offline: #ef4444;
             --checking: #facc15;
+            --notify-bg: rgba(255, 255, 255, 0.05);
         }
 
         * {
@@ -132,8 +133,33 @@
             padding: 12px;
             border-radius: 12px;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             transition: 0.2s;
+        }
+
+        /* New Notify Button Styles */
+        .notify-btn {
+            background: var(--notify-bg);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 1.5rem;
+        }
+
+        .notify-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .notify-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .status-card {
@@ -157,7 +183,6 @@
 
         .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text-muted); transition: 0.3s; }
 
-        /* Status Colors */
         .checking .dot { background-color: var(--checking); box-shadow: 0 0 10px var(--checking); animation: pulse 1s infinite; }
         .online .dot { background-color: var(--online); box-shadow: 0 0 15px var(--online); animation: pulse 2s infinite; }
         .offline .dot { background-color: var(--offline); box-shadow: 0 0 10px var(--offline); }
@@ -200,6 +225,10 @@
         </div>
 
         <a href="https://discord.gg/cxE5jsMMkr" target="_blank" class="discord-btn">Join Discord Server</a>
+        
+        <button id="notifyBtn" class="notify-btn" onclick="sendNotification()">
+            Server Sleeping? Turn it on here.
+        </button>
 
         <div class="status-card">
             <div id="status-container" class="status checking">
@@ -228,23 +257,56 @@
         });
     }
 
+    async function sendNotification() {
+        const btn = document.getElementById('notifyBtn');
+        const webhookURL = "https://discord.com/api/webhooks/1488857585657577482/RqHgWoEFVA7iqXAqOgLxfqqhX8UY6_-KOBIF0ZAFaZG5vDaR7svX_KTqF-DnvOjTGTmq";
+
+        if (btn.disabled) return;
+
+        const data = {
+            username: "Galaxy SMP Monitor",
+            content: "**Server Request!** Someone is on the website and says the server is **OFFLINE**. Please turn it on!"
+        };
+
+        try {
+            const response = await fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                btn.innerText = "Turning on the server";
+                btn.style.borderColor = "#22c55e";
+                btn.style.color = "#22c55e";
+                btn.disabled = true;
+
+                // 5 Minute Cooldown
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerText = "Turn On the Server";
+                    btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    btn.style.color = "var(--text-muted)";
+                }, 300000);
+            } else {
+                alert("Cannot turn on the server right now, please try later.");
+            }
+        } catch (error) {
+            alert("Error: Check your connection.");
+        }
+    }
+
     async function updateStatus() {
         const statusContainer = document.getElementById('status-container');
         const statusText = document.getElementById('status-text');
         const playerInfo = document.getElementById('player-info');
         const playerNumbers = document.getElementById('player-numbers');
 
-        // Initial state
-        statusContainer.className = "status checking";
-        statusText.innerText = "Pinging...";
-        
         try {
-            // Using a fresh timestamp to prevent browser caching
+            // Updated to your specific Aternos address
             const response = await fetch('https://api.mcsrvstat.us/2/galaxysmpisthis.aternos.me:47475?t=' + Date.now());
             const data = await response.json();
 
-            // STRICT CHECK: 
-            // Aternos proxies are "online" but have 0 max players or no "version" info when the actual server is off.
             if (data.online && data.players && data.players.max > 0) {
                 statusContainer.className = "status online";
                 statusText.innerText = "Server Active";
@@ -253,7 +315,6 @@
                 playerInfo.style.display = "block";
                 playerNumbers.innerText = `${data.players.online} / ${data.players.max}`;
             } else {
-                // If it's just the proxy answering, mark as Offline
                 statusContainer.className = "status offline";
                 statusText.innerText = "Server Sleeping";
                 statusText.style.color = "var(--offline)";
@@ -266,10 +327,8 @@
         }
     }
 
-    // Run on load
     updateStatus();
-    // Refresh every 30 seconds
-    setInterval(updateStatus, 3000);
+    setInterval(updateStatus, 30000); // Updated to 30 seconds to avoid API limits
 </script>
 
 </body>
