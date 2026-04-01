@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Galaxy SMP - A private, friends-only Minecraft server on Aternos.">
+    <meta name="description" content="Galaxy SMP - A private, friends-only Minecraft server.">
     <title>Galaxy SMP | Private Server</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -35,12 +35,13 @@
             min-height: 100vh;
             background: radial-gradient(circle at 50% 0%, #1a1528 0%, #07090f 70%);
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
             text-align: center;
             padding: 3rem;
-            max-width: 600px;
+            max-width: 500px;
             width: 100%;
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -51,10 +52,9 @@
         }
 
         @media (max-width: 480px) {
-            .container { padding: 1.5rem; border-radius: 16px; }
-            h1 { font-size: 2.5rem !important; }
-            .ip-box { flex-direction: column; gap: 12px; text-align: center; }
-            .copy-btn { width: 100%; }
+            .container { padding: 1.5rem; border-radius: 20px; }
+            h1 { font-size: 2.2rem !important; }
+            .ip-text { font-size: 0.9rem !important; }
         }
 
         .tag {
@@ -64,17 +64,16 @@
             color: var(--accent);
             border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 30px;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            letter-spacing: -1px;
             margin-bottom: 0.5rem;
             background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
@@ -83,49 +82,47 @@
 
         p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1rem;
+            line-height: 1.5;
             margin-bottom: 2rem;
         }
 
         .info-grid {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 2rem;
+            gap: 12px;
+            margin-bottom: 1.5rem;
         }
 
         .ip-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 1rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: 0.3s;
+            border-radius: 14px;
+            text-align: center;
         }
 
         .label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent);
             text-transform: uppercase;
             font-weight: 700;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
-        .ip-text { font-family: monospace; font-size: 1.2rem; color: #fff; }
+        .ip-text { font-family: monospace; font-size: 1.1rem; color: #fff; display: block; margin-bottom: 10px; word-break: break-all; }
 
         .copy-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 0;
+            width: 100%;
+            border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
 
         .discord-btn {
@@ -133,19 +130,17 @@
             background: var(--discord-color);
             color: white;
             text-decoration: none;
-            padding: 1.2rem;
-            border-radius: 12px;
+            padding: 1rem;
+            border-radius: 14px;
             font-weight: 700;
-            margin-bottom: 2rem;
-            transition: 0.3s;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
         }
-
-        .discord-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
         .status-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -153,31 +148,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 0.85rem;
         }
 
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #444; }
 
         .online .dot {
             background-color: var(--online);
-            box-shadow: 0 0 15px var(--online);
+            box-shadow: 0 0 12px var(--online);
             animation: pulse 2s infinite;
         }
 
-        .offline .dot { background-color: var(--offline); box-shadow: 0 0 15px var(--offline); }
+        .offline .dot { background-color: var(--offline); box-shadow: 0 0 12px var(--offline); }
 
-        .player-info { margin-top: 15px; display: none; }
-        .player-count { font-size: 2rem; font-weight: 700; }
-        .player-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+        .player-info { margin-top: 10px; display: none; }
+        .player-count { font-size: 1.5rem; font-weight: 700; }
+        .player-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -186,22 +182,18 @@
     <div class="container">
         <div class="tag">Friends Only</div>
         <h1>Galaxy SMP</h1>
-        <p>A private vanilla survival experience. Copy the info below and join the galaxy.</p>
+        <p>A private vanilla survival experience. Copy the info below to join.</p>
 
         <div class="info-grid">
             <div class="ip-box">
-                <div>
-                    <span class="label">Server IP</span>
-                    <span class="ip-text" id="server-ip">galaxysmpisthis.aternos.me</span>
-                </div>
+                <span class="label">Server IP</span>
+                <span class="ip-text" id="server-ip">galaxysmpisthis.aternos.me</span>
                 <button class="copy-btn" onclick="copyText('server-ip', 'btn-ip')" id="btn-ip">Copy IP</button>
             </div>
 
             <div class="ip-box">
-                <div>
-                    <span class="label">Server Port</span>
-                    <span class="ip-text" id="server-port">47475</span>
-                </div>
+                <span class="label">Server Port</span>
+                <span class="ip-text" id="server-port">47475</span>
                 <button class="copy-btn" onclick="copyText('server-port', 'btn-port')" id="btn-port">Copy Port</button>
             </div>
         </div>
@@ -242,7 +234,6 @@
             const playerNumbers = document.getElementById('player-numbers');
 
             try {
-                // Aternos address pinging via mcapi.us
                 const response = await fetch('https://mcapi.us/server/status?ip=galaxysmpisthis.aternos.me&port=47475');
                 const data = await response.json();
 
@@ -252,23 +243,6 @@
                     statusText.style.color = "var(--online)";
                     playerInfo.style.display = "block";
                     playerNumbers.innerText = `${data.players.now} / ${data.players.max}`;
-                } else {
-                    statusContainer.className = "status offline";
-                    statusText.innerText = "Server Offline";
-                    statusText.style.color = "var(--offline)";
-                    playerInfo.style.display = "none";
-                }
-            } catch (e) {
-                statusText.innerText = "Offline";
-                statusContainer.className = "status offline";
-            }
-        }
-
-        updateStatus();
-        setInterval(updateStatus, 30000);
-    </script>
-</body>
-</html>
                 } else {
                     statusContainer.className = "status offline";
                     statusText.innerText = "Server Offline";
