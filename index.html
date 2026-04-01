@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #07090f;
-            --card-bg: rgba(20, 24, 36, 0.6);
+            --card-bg: rgba(20, 24, 36, 0.8);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #8b5cf6;
@@ -17,6 +17,7 @@
             --discord-color: #5865F2;
             --online: #22c55e;
             --offline: #ef4444;
+            --checking: #facc15;
         }
 
         * {
@@ -35,54 +36,43 @@
             min-height: 100vh;
             background: radial-gradient(circle at 50% 0%, #1a1528 0%, #07090f 70%);
             padding: 20px;
-            overflow-x: hidden;
         }
 
         .container {
             text-align: center;
-            padding: 3rem;
-            max-width: 500px;
+            padding: 2.5rem;
+            max-width: 450px;
             width: 100%;
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
+            border-radius: 20px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1s ease-out;
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 1.5rem; border-radius: 20px; }
-            h1 { font-size: 2.2rem !important; }
-            .ip-text { font-size: 0.9rem !important; }
         }
 
         .tag {
             display: inline-block;
-            padding: 6px 16px;
-            background: rgba(139, 92, 246, 0.1);
+            padding: 6px 14px;
+            background: rgba(139, 92, 246, 0.15);
             color: var(--accent);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 30px;
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
         }
 
         p {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 2rem;
         }
@@ -90,37 +80,46 @@
         .info-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 1.5rem;
         }
 
         .ip-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 1rem;
-            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.2rem;
+            border-radius: 12px;
             text-align: center;
         }
 
         .label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--accent);
             text-transform: uppercase;
             font-weight: 700;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
-        .ip-text { font-family: monospace; font-size: 1.1rem; color: #fff; display: block; margin-bottom: 10px; word-break: break-all; }
+        .ip-text { 
+            font-family: monospace; 
+            font-size: 1.15rem; 
+            color: #fff; 
+            display: block; 
+            margin-bottom: 12px; 
+            word-break: break-all;
+        }
 
         .copy-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 8px 0;
+            padding: 12px 0;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -130,46 +129,48 @@
             background: var(--discord-color);
             color: white;
             text-decoration: none;
-            padding: 1rem;
-            border-radius: 14px;
+            padding: 12px;
+            border-radius: 12px;
             font-weight: 700;
             margin-bottom: 1.5rem;
             transition: 0.2s;
         }
 
         .status-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
         }
 
         .status {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.85rem;
         }
 
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #444; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text-muted); transition: 0.3s; }
 
-        .online .dot {
-            background-color: var(--online);
-            box-shadow: 0 0 12px var(--online);
-            animation: pulse 2s infinite;
+        /* Status Colors */
+        .checking .dot { background-color: var(--checking); box-shadow: 0 0 10px var(--checking); animation: pulse 1s infinite; }
+        .online .dot { background-color: var(--online); box-shadow: 0 0 15px var(--online); animation: pulse 2s infinite; }
+        .offline .dot { background-color: var(--offline); box-shadow: 0 0 10px var(--offline); }
+
+        .player-info { margin-top: 15px; display: none; }
+        .player-count { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .player-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
+            h1 { font-size: 2.2rem; }
         }
 
-        .offline .dot { background-color: var(--offline); box-shadow: 0 0 12px var(--offline); }
-
-        .player-info { margin-top: 10px; display: none; }
-        .player-count { font-size: 1.5rem; font-weight: 700; }
-        .player-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.2); opacity: 0.7; }
@@ -182,7 +183,7 @@
     <div class="container">
         <div class="tag">Friends Only</div>
         <h1>Galaxy SMP</h1>
-        <p>A private vanilla survival experience. Copy the info below to join.</p>
+        <p>A private vanilla survival experience. Copy the info below and join the galaxy.</p>
 
         <div class="info-grid">
             <div class="ip-box">
@@ -201,13 +202,13 @@
         <a href="https://discord.gg/cxE5jsMMkr" target="_blank" class="discord-btn">Join Discord Server</a>
 
         <div class="status-card">
-            <div id="status-container" class="status">
+            <div id="status-container" class="status checking">
                 <div class="dot"></div>
-                <span id="status-text">Checking Status...</span>
+                <span id="status-text" style="color: var(--checking);">Pinging Server...</span>
             </div>
             <div class="player-info" id="player-info">
                 <div class="player-count" id="player-numbers">0 / 0</div>
-                <div class="player-label">Players Online</div>
+                <div class="player-label">Active Explorers</div>
             </div>
         </div>
     </div>
@@ -233,30 +234,47 @@
             const playerInfo = document.getElementById('player-info');
             const playerNumbers = document.getElementById('player-numbers');
 
+            // 1. Immediately show that a check is happening
+            statusContainer.className = "status checking";
+            statusText.innerText = "Pinging Server...";
+            statusText.style.color = "var(--checking)";
+            
             try {
-                const response = await fetch('https://mcapi.us/server/status?ip=galaxysmpisthis.aternos.me&port=47475');
+                // 2. Use mcsrvstat.us (Better for Aternos detection)
+                const response = await fetch('https://api.mcsrvstat.us/2/galaxysmpisthis.aternos.me:47475');
                 const data = await response.json();
 
+                // 3. Update UI based on real status
                 if (data.online) {
                     statusContainer.className = "status online";
-                    statusText.innerText = "Server Online";
+                    statusText.innerText = "Server Active";
                     statusText.style.color = "var(--online)";
+                    
                     playerInfo.style.display = "block";
-                    playerNumbers.innerText = `${data.players.now} / ${data.players.max}`;
+                    // mcsrvstat.us uses 'data.players.online' instead of 'data.players.now'
+                    const currentPlayers = data.players ? data.players.online : 0;
+                    const maxPlayers = data.players ? data.players.max : 20;
+                    playerNumbers.innerText = `${currentPlayers} / ${maxPlayers}`;
                 } else {
                     statusContainer.className = "status offline";
-                    statusText.innerText = "Server Offline";
+                    statusText.innerText = "Server Sleeping"; // Aternos specific phrasing
                     statusText.style.color = "var(--offline)";
                     playerInfo.style.display = "none";
                 }
             } catch (e) {
-                statusText.innerText = "Offline";
                 statusContainer.className = "status offline";
+                statusText.innerText = "Ping Failed";
+                statusText.style.color = "var(--offline)";
+                playerInfo.style.display = "none";
             }
         }
 
+        // Run instantly when the page opens
         updateStatus();
-        setInterval(updateStatus, 30000);
+        
+        // Then ping the server every 20 seconds to keep it live
+        setInterval(updateStatus, 2000);
     </script>
+
 </body>
 </html>
